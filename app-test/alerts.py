@@ -332,7 +332,7 @@ def send_email_alert(
 
     smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.environ.get("SMTP_PORT", "587"))
-    smtp_user = os.environ.get("SMTP_USER", "")
+    smtp_user = os.environ.get("SMTP_USER", "michael@mijncadeau.nl")
     smtp_pass = os.environ.get("SMTP_PASS", "")
 
     if not smtp_user or not smtp_pass:

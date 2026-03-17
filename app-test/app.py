@@ -32,10 +32,26 @@ st.title("🪁 Kite Advisor NL")
 st.caption("Vind de beste kitespot — gebaseerd op wind, richting en jouw locatie.")
 
 # ---------------------------------------------------------------------------
-# Sidebar — inputs
+# Hero section — postcode + e-mail (prominent on start screen)
+# ---------------------------------------------------------------------------
+col_pc, col_email = st.columns(2)
+with col_pc:
+    postcode = st.text_input(
+        "📍 Jouw postcode",
+        value="1057 TB",
+        help="We zoeken de beste kitespots in jouw buurt.",
+    )
+with col_email:
+    alert_email = st.text_input(
+        "📧 E-mailadres voor wind alerts",
+        placeholder="jouw@email.nl",
+        help="Ontvang een e-mail + agenda-uitnodiging zodra er 20+ knopen wind komt.",
+    )
+
+# ---------------------------------------------------------------------------
+# Sidebar — overige instellingen
 # ---------------------------------------------------------------------------
 st.sidebar.header("Instellingen")
-postcode = st.sidebar.text_input("Postcode", value="1057 TB")
 board_type = st.sidebar.selectbox("Board type", ["Twintip", "Foil"])
 level = st.sidebar.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"])
 water_filter = st.sidebar.selectbox("Water type", ["Alles", "Zee", "Binnenwater"])
@@ -52,17 +68,7 @@ max_kn = st.sidebar.number_input(
     max_value=60,
     value=35,
 )
-
-# ---------------------------------------------------------------------------
-# Sidebar — E-mail alerts
-# ---------------------------------------------------------------------------
 st.sidebar.markdown("---")
-st.sidebar.header("📧 Wind Alerts")
-alert_email = st.sidebar.text_input(
-    "E-mailadres voor alerts",
-    placeholder="jouw@email.nl",
-    help="Ontvang een e-mail + agenda-uitnodiging als er 20+ knopen wind komt.",
-)
 alert_threshold_kn = st.sidebar.number_input(
     "Alert drempel (knopen)",
     min_value=10,
@@ -255,8 +261,9 @@ else:
         )
 
     # Email sending
+    st.subheader("📧 Ontvang per e-mail")
     if alert_email:
-        if st.button("📧 Verstuur alert + agenda naar mijn e-mail"):
+        if st.button("📧 Verstuur alert + agenda naar mijn e-mail", type="primary"):
             ics_files = save_ics_events(wind_sessions)
             sent = send_email_alert(
                 to_email=alert_email,
@@ -273,8 +280,9 @@ else:
                     "en in je agenda importeren."
                 )
     else:
-        st.caption(
-            "💡 Vul je e-mailadres in de sidebar in om alerts per e-mail te ontvangen."
+        st.info(
+            "⬆️ Vul hierboven je e-mailadres in om alerts + agenda-uitnodigingen "
+            "per e-mail te ontvangen."
         )
 
 # ---------------------------------------------------------------------------
