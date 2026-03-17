@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Wijk aan Zee",
+    "lat": 52.493,
+    "lon": 4.602,
+    "water_type": "sea",
+    "dir_windows_deg": "220-300",
+    "min_kn_twintip": 16,
+    "min_kn_foil": 10,
+    "windguru_spot_id": 1120682,
+    "soarcast_spot_slug": "wijk-aan-zee",
+    "nkv_url": "https://kitesurfvereniging.nl/kitespot/wijk-aan-zee-hangout/"
+  },
+  {
+    "name": "IJmuiden",
+    "lat": 52.461,
+    "lon": 4.554,
+    "water_type": "sea",
+    "dir_windows_deg": "220-300",
+    "min_kn_twintip": 16,
+    "min_kn_foil": 10,
+    "windguru_spot_id": 48299,
+    "soarcast_spot_slug": "ijmuiden",
+    "nkv_url": ""
+  },
+  {
+    "name": "Muiderberg",
+    "lat": 52.333,
+    "lon": 5.105,
+    "water_type": "flat",
+    "dir_windows_deg": "0-180",
+    "min_kn_twintip": 14,
+    "min_kn_foil": 9,
+    "windguru_spot_id": 1237807,
+    "soarcast_spot_slug": "muiderberg",
+    "nkv_url": ""
+  },
+  {
+    "name": "Medemblik",
+    "lat": 52.773,
+    "lon": 5.106,
+    "water_type": "flat",
+    "dir_windows_deg": "40-170",
+    "min_kn_twintip": 14,
+    "min_kn_foil": 9,
+    "windguru_spot_id": 48274,
+    "soarcast_spot_slug": "medemblik",
+    "nkv_url": ""
+  },
+  {
+    "name": "Schellinkhout",
+    "lat": 52.64,
+    "lon": 5.13,
+    "water_type": "flat",
+    "dir_windows_deg": "40-170",
+    "min_kn_twintip": 14,
+    "min_kn_foil": 9,
+    "windguru_spot_id": 46940,
+    "soarcast_spot_slug": "schellinkhout",
+    "nkv_url": "https://kitesurfvereniging.nl/kitespot/schellinkhout/"
+  }
+]

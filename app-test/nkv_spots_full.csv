@@ -1,0 +1,6 @@
+name,lat,lon,water_type,dir_windows_deg,min_kn_twintip,min_kn_foil,windguru_spot_id,soarcast_spot_slug,nkv_url
+Wijk aan Zee,52.493,4.602,sea,"220-300",16,10,1120682,wijk-aan-zee,https://kitesurfvereniging.nl/kitespot/wijk-aan-zee-hangout/
+IJmuiden,52.461,4.554,sea,"220-300",16,10,48299,ijmuiden,
+Muiderberg,52.333,5.105,flat,"0-180",14,9,1237807,muiderberg,
+Medemblik,52.773,5.106,flat,"40-170",14,9,48274,medemblik,
+Schellinkhout,52.64,5.13,flat,"40-170",14,9,46940,schellinkhout,https://kitesurfvereniging.nl/kitespot/schellinkhout/
