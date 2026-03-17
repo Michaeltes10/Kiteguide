@@ -15,6 +15,14 @@ from utils import (
     parse_dir_windows,
     is_direction_in_window,
 )
+from alerts import (
+    find_alert_sessions,
+    group_sessions,
+    save_ics_events,
+    generate_ics_event,
+    format_alert_message,
+    send_email_alert,
+)
 
 # ---------------------------------------------------------------------------
 # Page config
@@ -43,6 +51,24 @@ max_kn = st.sidebar.number_input(
     min_value=10,
     max_value=60,
     value=35,
+)
+
+# ---------------------------------------------------------------------------
+# Sidebar — E-mail alerts
+# ---------------------------------------------------------------------------
+st.sidebar.markdown("---")
+st.sidebar.header("📧 Wind Alerts")
+alert_email = st.sidebar.text_input(
+    "E-mailadres voor alerts",
+    placeholder="jouw@email.nl",
+    help="Ontvang een e-mail + agenda-uitnodiging als er 20+ knopen wind komt.",
+)
+alert_threshold_kn = st.sidebar.number_input(
+    "Alert drempel (knopen)",
+    min_value=10,
+    max_value=50,
+    value=20,
+    help="Je krijgt een alert bij wind >= dit aantal knopen.",
 )
 
 # ---------------------------------------------------------------------------
@@ -183,6 +209,73 @@ else:
                 use_container_width=True,
                 hide_index=True,
             )
+
+# ---------------------------------------------------------------------------
+# Section 3 — Wind alerts & agenda
+# ---------------------------------------------------------------------------
+st.header("📧 Wind Alerts & Agenda")
+
+with st.spinner("Wind alerts berekenen…"):
+    alert_sessions_raw = find_alert_sessions(
+        spots_df,
+        days=days_ahead,
+        board_type=board_type,
+        level=level,
+        wind_threshold_kn=float(alert_threshold_kn),
+    )
+    sessions = group_sessions(alert_sessions_raw)
+    # Filter to sessions that have wind >= threshold
+    wind_sessions = [s for s in sessions if s["calendar_event"]]
+
+if not wind_sessions:
+    st.info(
+        f"Geen sessies met {alert_threshold_kn}+ knopen gevonden "
+        f"in de komende {days_ahead} dagen."
+    )
+else:
+    st.success(
+        f"🎉 {len(wind_sessions)} sessie(s) met {alert_threshold_kn}+ knopen gevonden!"
+    )
+    for session in wind_sessions:
+        msg = format_alert_message(session)
+        st.markdown(f"- {msg}")
+
+    # Generate .ics downloads
+    st.subheader("📅 Toevoegen aan je agenda")
+    for session in wind_sessions:
+        ics_content = generate_ics_event(session)
+        start_str = pd.Timestamp(session["start"]).strftime("%a %d %b %H:%M")
+        filename = f"kite_{session['spot'].replace(' ', '_')}.ics"
+        st.download_button(
+            label=f"📅 {session['spot']} — {start_str} ({session['avg_wind_kn']} kn)",
+            data=ics_content,
+            file_name=filename,
+            mime="text/calendar",
+            key=f"ics_{session['spot']}_{session['start']}",
+        )
+
+    # Email sending
+    if alert_email:
+        if st.button("📧 Verstuur alert + agenda naar mijn e-mail"):
+            ics_files = save_ics_events(wind_sessions)
+            sent = send_email_alert(
+                to_email=alert_email,
+                sessions=wind_sessions,
+                ics_files=ics_files,
+            )
+            if sent:
+                st.success(f"✅ E-mail met agenda-uitnodiging(en) verzonden naar {alert_email}!")
+            else:
+                st.warning(
+                    "⚠️ E-mail kon niet verzonden worden. "
+                    "SMTP is nog niet geconfigureerd. "
+                    "Je kunt de .ics bestanden hierboven handmatig downloaden "
+                    "en in je agenda importeren."
+                )
+    else:
+        st.caption(
+            "💡 Vul je e-mailadres in de sidebar in om alerts per e-mail te ontvangen."
+        )
 
 # ---------------------------------------------------------------------------
 # Footer

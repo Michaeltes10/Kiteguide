@@ -27,7 +27,7 @@ from utils import (
 # ---------------------------------------------------------------------------
 
 ALERT_SCORE_THRESHOLD = 0.6
-ALERT_WIND_THRESHOLD_KN = 25  # Calendar event trigger
+ALERT_WIND_THRESHOLD_KN = 20  # Calendar + email event trigger
 CHECK_INTERVAL_SECONDS = 3600  # 1 hour
 DEFAULT_BOARD = "Twintip"
 DEFAULT_LEVEL = "Intermediate"
@@ -97,7 +97,7 @@ def find_alert_sessions(
                     "wind_dir": degrees_to_compass(wind_dir),
                     "wind_dir_deg": wind_dir,
                     "score": score,
-                    "trigger": "wind_25kn" if is_strong_wind else "high_score",
+                    "trigger": "wind_threshold" if is_strong_wind else "high_score",
                 })
 
     return alerts
@@ -151,7 +151,7 @@ def _build_session(spot: str, start, end, alert_rows) -> Dict:
     winds = [r["wind_kn"] for r in alert_rows]
     scores = [r["score"] for r in alert_rows]
     dirs = [r["wind_dir"] for r in alert_rows]
-    has_25kn = any(r["trigger"] == "wind_25kn" for r in alert_rows)
+    has_threshold = any(r["trigger"] == "wind_threshold" for r in alert_rows)
 
     return {
         "spot": spot,
@@ -162,7 +162,7 @@ def _build_session(spot: str, start, end, alert_rows) -> Dict:
         "best_score": max(scores),
         "main_dir": max(set(dirs), key=dirs.count),
         "hours": len(alert_rows),
-        "calendar_event": has_25kn,
+        "calendar_event": has_threshold,
     }
 
 
@@ -314,9 +314,70 @@ def send_telegram_alert(message: str, chat_id: str, bot_token: str):
     raise NotImplementedError("Telegram alerts not yet implemented. Add in app-pro.")
 
 
-def send_email_alert(message: str, to_email: str):
-    """TODO: Implement email alert sending."""
-    raise NotImplementedError("Email alerts not yet implemented. Add in app-pro.")
+def send_email_alert(
+    to_email: str,
+    sessions: List[Dict],
+    ics_files: Optional[List[str]] = None,
+) -> bool:
+    """
+    Send a kite wind alert email with .ics attachments.
+    Uses SMTP (configured via env vars or Streamlit secrets).
+    Falls back to a simple summary if SMTP is not configured.
+    """
+    import smtplib
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    from email.mime.base import MIMEBase
+    from email import encoders
+
+    smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    smtp_port = int(os.environ.get("SMTP_PORT", "587"))
+    smtp_user = os.environ.get("SMTP_USER", "")
+    smtp_pass = os.environ.get("SMTP_PASS", "")
+
+    if not smtp_user or not smtp_pass:
+        print(f"⚠️ SMTP niet geconfigureerd — e-mail naar {to_email} overgeslagen.")
+        return False
+
+    # Build email body
+    body_lines = ["🪁 Kite Advisor NL — Wind Alert!\n"]
+    for session in sessions:
+        body_lines.append(format_alert_message(session))
+    body_lines.append("\nVeel plezier op het water! 🤙")
+
+    msg = MIMEMultipart()
+    msg["From"] = smtp_user
+    msg["To"] = to_email
+    msg["Subject"] = f"🪁 Kite Alert: {len(sessions)} sessie(s) met 20+ knopen!"
+
+    msg.attach(MIMEText("\n".join(body_lines), "plain", "utf-8"))
+
+    # Attach .ics files
+    if ics_files:
+        for ics_path in ics_files:
+            if os.path.exists(ics_path):
+                with open(ics_path, "r") as f:
+                    ics_content = f.read()
+                part = MIMEBase("text", "calendar", method="REQUEST")
+                part.set_payload(ics_content.encode("utf-8"))
+                encoders.encode_base64(part)
+                part.add_header(
+                    "Content-Disposition",
+                    "attachment",
+                    filename=os.path.basename(ics_path),
+                )
+                msg.attach(part)
+
+    try:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=15) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, to_email, msg.as_string())
+        print(f"✅ E-mail verzonden naar {to_email}")
+        return True
+    except Exception as e:
+        print(f"❌ E-mail verzenden mislukt: {e}")
+        return False
 
 
 def create_google_calendar_event(session: Dict, credentials_path: str):
