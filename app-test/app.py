@@ -56,8 +56,8 @@ footer {visibility: hidden;}
 
 /* ---------- Hero banner ---------- */
 .hero-banner {
-    background: linear-gradient(135deg, rgba(12,25,41,0.85) 0%, rgba(19,35,55,0.7) 50%, rgba(56,189,248,0.4) 100%),
-                url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1400&q=80') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(12,25,41,0.75) 0%, rgba(19,35,55,0.6) 50%, rgba(56,189,248,0.3) 100%),
+                url('https://www.kitemana.nl/Public/img/contentpages/tips/kitesurfen.jpg') center/cover no-repeat;
     border-radius: 16px;
     padding: 3.5rem 2.5rem 3rem;
     margin-bottom: 2rem;
@@ -88,51 +88,6 @@ footer {visibility: hidden;}
     margin: 0;
     font-weight: 400;
     text-shadow: 0 1px 10px rgba(0,0,0,0.4);
-}
-
-/* ---------- Photo banner between sections ---------- */
-.photo-banner {
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    position: relative;
-    height: 180px;
-}
-.photo-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.photo-banner .photo-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem 1.2rem;
-    background: linear-gradient(transparent, rgba(12,25,41,0.9));
-    color: rgba(255,255,255,0.7);
-    font-size: 0.8rem;
-    font-style: italic;
-}
-
-/* ---------- Photo grid ---------- */
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.8rem;
-    margin: 1rem 0;
-}
-.photo-grid img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.photo-grid img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 25px rgba(56,189,248,0.2);
 }
 
 /* ---------- Section headers ---------- */
@@ -377,15 +332,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Kitesurf photo strip under hero
-st.markdown("""
-<div class="photo-grid">
-    <img src="https://images.unsplash.com/photo-1504803900752-c2051699d0e8?w=500&q=80" alt="Kitesurfer at sunset">
-    <img src="https://images.unsplash.com/photo-1621252179027-94459d278660?w=500&q=80" alt="Kite in the air">
-    <img src="https://images.unsplash.com/photo-1564415315949-7a0c4c73aab4?w=500&q=80" alt="Beach kite session">
-</div>
-""", unsafe_allow_html=True)
-
 # ---------------------------------------------------------------------------
 # Hero section — postcode + e-mail (prominent on start screen)
 # ---------------------------------------------------------------------------
@@ -414,12 +360,6 @@ if alert_signup:
 # ---------------------------------------------------------------------------
 # Sidebar — overige instellingen
 # ---------------------------------------------------------------------------
-st.sidebar.markdown(
-    '<img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&q=80" '
-    'style="width:100%;border-radius:10px;margin-bottom:1rem;opacity:0.8" '
-    'alt="Kitesurfing">',
-    unsafe_allow_html=True,
-)
 st.sidebar.markdown("## INSTELLINGEN")
 board_type = st.sidebar.selectbox("Board type", ["Twintip", "Foil"])
 level = st.sidebar.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"])
@@ -516,14 +456,6 @@ if now_rows:
         )
 else:
     st.info("Geen actuele data beschikbaar.")
-
-# Photo banner divider
-st.markdown("""
-<div class="photo-banner">
-    <img src="https://images.unsplash.com/photo-1502933691298-84fc14542831?w=1400&q=80" alt="Kitesurfing action">
-    <div class="photo-overlay">Wind, golven en vrijheid — jouw volgende sessie begint hier</div>
-</div>
-""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
 # Section 2 — Forecast ranking
@@ -635,14 +567,6 @@ else:
                 use_container_width=True,
                 hide_index=True,
             )
-
-# Photo banner divider
-st.markdown("""
-<div class="photo-banner">
-    <img src="https://images.unsplash.com/photo-1517699418036-fb5d179fef0c?w=1400&q=80" alt="Kites on the beach">
-    <div class="photo-overlay">Mis geen sessie — stel je wind alerts in</div>
-</div>
-""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
 # Section 3 — Wind alerts & agenda
