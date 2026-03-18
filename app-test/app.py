@@ -56,9 +56,10 @@ footer {visibility: hidden;}
 
 /* ---------- Hero banner ---------- */
 .hero-banner {
-    background: linear-gradient(135deg, #0B1120 0%, #0D2847 40%, #00B4D8 100%);
+    background: linear-gradient(135deg, rgba(12,25,41,0.85) 0%, rgba(19,35,55,0.7) 50%, rgba(56,189,248,0.4) 100%),
+                url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1400&q=80') center/cover no-repeat;
     border-radius: 16px;
-    padding: 2.5rem 2.5rem 2rem;
+    padding: 3.5rem 2.5rem 3rem;
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
@@ -70,21 +71,68 @@ footer {visibility: hidden;}
     right: -20%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(0,180,216,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(56,189,248,0.2) 0%, transparent 70%);
     pointer-events: none;
 }
 .hero-title {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: 800;
     color: #FFFFFF;
-    margin: 0 0 0.3rem 0;
+    margin: 0 0 0.5rem 0;
     letter-spacing: -0.5px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
 }
 .hero-subtitle {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.7);
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.85);
     margin: 0;
     font-weight: 400;
+    text-shadow: 0 1px 10px rgba(0,0,0,0.4);
+}
+
+/* ---------- Photo banner between sections ---------- */
+.photo-banner {
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    position: relative;
+    height: 180px;
+}
+.photo-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.photo-banner .photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.2rem;
+    background: linear-gradient(transparent, rgba(12,25,41,0.9));
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* ---------- Photo grid ---------- */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin: 1rem 0;
+}
+.photo-grid img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.photo-grid img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(56,189,248,0.2);
 }
 
 /* ---------- Section headers ---------- */
@@ -94,26 +142,26 @@ footer {visibility: hidden;}
     color: #E8EDF5;
     margin: 2rem 0 1rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #00B4D8;
+    border-bottom: 2px solid #38BDF8;
     display: inline-block;
 }
 
 /* ---------- Metric cards ---------- */
 .metric-card {
     background: #162032;
-    border: 1px solid rgba(0,180,216,0.2);
+    border: 1px solid rgba(56,189,248,0.2);
     border-radius: 12px;
     padding: 1.2rem;
     text-align: center;
     transition: border-color 0.2s;
 }
 .metric-card:hover {
-    border-color: #00B4D8;
+    border-color: #38BDF8;
 }
 .metric-value {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #00B4D8;
+    color: #38BDF8;
 }
 .metric-label {
     font-size: 0.8rem;
@@ -144,7 +192,7 @@ footer {visibility: hidden;}
 /* ---------- Spot cards ---------- */
 .spot-card {
     background: #162032;
-    border: 1px solid rgba(0,180,216,0.15);
+    border: 1px solid rgba(56,189,248,0.15);
     border-radius: 12px;
     padding: 1rem 1.2rem;
     margin-bottom: 0.8rem;
@@ -153,7 +201,7 @@ footer {visibility: hidden;}
     align-items: center;
 }
 .spot-card:hover {
-    border-color: #00B4D8;
+    border-color: #38BDF8;
     background: #1a2640;
 }
 .spot-name {
@@ -168,7 +216,7 @@ footer {visibility: hidden;}
 .spot-wind {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #00B4D8;
+    color: #38BDF8;
 }
 .spot-detail {
     font-size: 0.8rem;
@@ -183,7 +231,7 @@ footer {visibility: hidden;}
 
 /* ---------- Buttons ---------- */
 .stButton > button {
-    background: linear-gradient(135deg, #00B4D8, #0077B6);
+    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
     color: white;
     border: none;
     border-radius: 8px;
@@ -194,9 +242,9 @@ footer {visibility: hidden;}
     transition: all 0.2s;
 }
 .stButton > button:hover {
-    background: linear-gradient(135deg, #00C4E8, #0087C6);
+    background: linear-gradient(135deg, #5CCBFA, #1DB5F0);
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0,180,216,0.3);
+    box-shadow: 0 4px 15px rgba(56,189,248,0.3);
 }
 .stButton > button:active {
     transform: translateY(0);
@@ -214,34 +262,34 @@ footer {visibility: hidden;}
 /* Download buttons */
 .stDownloadButton > button {
     background: transparent;
-    border: 1px solid rgba(0,180,216,0.4);
-    color: #00B4D8;
+    border: 1px solid rgba(56,189,248,0.4);
+    color: #38BDF8;
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.2s;
 }
 .stDownloadButton > button:hover {
-    background: rgba(0,180,216,0.1);
-    border-color: #00B4D8;
+    background: rgba(56,189,248,0.1);
+    border-color: #38BDF8;
 }
 
 /* ---------- Inputs ---------- */
 .stTextInput > div > div > input {
     background: #162032;
-    border: 1px solid rgba(0,180,216,0.3);
+    border: 1px solid rgba(56,189,248,0.3);
     border-radius: 8px;
     color: #E8EDF5;
     font-size: 0.95rem;
 }
 .stTextInput > div > div > input:focus {
-    border-color: #00B4D8;
-    box-shadow: 0 0 0 2px rgba(0,180,216,0.2);
+    border-color: #38BDF8;
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.2);
 }
 
 /* ---------- Sidebar ---------- */
 [data-testid="stSidebar"] {
     background: #0D1825;
-    border-right: 1px solid rgba(0,180,216,0.1);
+    border-right: 1px solid rgba(56,189,248,0.1);
 }
 [data-testid="stSidebar"] .block-container {
     padding-top: 2rem;
@@ -249,7 +297,7 @@ footer {visibility: hidden;}
 
 /* Sidebar header */
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {
-    color: #00B4D8;
+    color: #38BDF8;
     font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -266,13 +314,13 @@ footer {visibility: hidden;}
 
 /* ---------- Score bar ---------- */
 .score-bar-bg {
-    background: rgba(0,180,216,0.1);
+    background: rgba(56,189,248,0.1);
     border-radius: 6px;
     height: 8px;
     width: 100%;
 }
 .score-bar-fill {
-    background: linear-gradient(90deg, #00B4D8, #00E5FF);
+    background: linear-gradient(90deg, #38BDF8, #7DD3FC);
     border-radius: 6px;
     height: 8px;
 }
@@ -302,18 +350,18 @@ footer {visibility: hidden;}
     padding: 2rem 0 1rem;
     color: rgba(232,237,245,0.4);
     font-size: 0.8rem;
-    border-top: 1px solid rgba(0,180,216,0.1);
+    border-top: 1px solid rgba(56,189,248,0.1);
     margin-top: 3rem;
 }
 .footer a {
-    color: #00B4D8;
+    color: #38BDF8;
     text-decoration: none;
 }
 
 /* ---------- Divider ---------- */
 hr {
     border: none;
-    border-top: 1px solid rgba(0,180,216,0.1);
+    border-top: 1px solid rgba(56,189,248,0.1);
     margin: 2rem 0;
 }
 </style>
@@ -326,6 +374,15 @@ st.markdown("""
 <div class="hero-banner">
     <p class="hero-title">🪁 Kite Advisor NL</p>
     <p class="hero-subtitle">Vind de beste kitespot — gebaseerd op wind, richting en jouw locatie.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Kitesurf photo strip under hero
+st.markdown("""
+<div class="photo-grid">
+    <img src="https://images.unsplash.com/photo-1504803900752-c2051699d0e8?w=500&q=80" alt="Kitesurfer at sunset">
+    <img src="https://images.unsplash.com/photo-1621252179027-94459d278660?w=500&q=80" alt="Kite in the air">
+    <img src="https://images.unsplash.com/photo-1564415315949-7a0c4c73aab4?w=500&q=80" alt="Beach kite session">
 </div>
 """, unsafe_allow_html=True)
 
@@ -357,6 +414,12 @@ if alert_signup:
 # ---------------------------------------------------------------------------
 # Sidebar — overige instellingen
 # ---------------------------------------------------------------------------
+st.sidebar.markdown(
+    '<img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&q=80" '
+    'style="width:100%;border-radius:10px;margin-bottom:1rem;opacity:0.8" '
+    'alt="Kitesurfing">',
+    unsafe_allow_html=True,
+)
 st.sidebar.markdown("## INSTELLINGEN")
 board_type = st.sidebar.selectbox("Board type", ["Twintip", "Foil"])
 level = st.sidebar.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"])
@@ -454,6 +517,14 @@ if now_rows:
 else:
     st.info("Geen actuele data beschikbaar.")
 
+# Photo banner divider
+st.markdown("""
+<div class="photo-banner">
+    <img src="https://images.unsplash.com/photo-1502933691298-84fc14542831?w=1400&q=80" alt="Kitesurfing action">
+    <div class="photo-overlay">Wind, golven en vrijheid — jouw volgende sessie begint hier</div>
+</div>
+""", unsafe_allow_html=True)
+
 # ---------------------------------------------------------------------------
 # Section 2 — Forecast ranking
 # ---------------------------------------------------------------------------
@@ -525,7 +596,7 @@ else:
     for _, r in top.iterrows():
         time_str = r["time"].strftime("%a %d %b %H:%M")
         score_pct = min(r["score"] * 100, 100)
-        score_color = "#00C853" if r["score"] > 0.5 else "#00B4D8" if r["score"] > 0.1 else "#FF9800"
+        score_color = "#00C853" if r["score"] > 0.5 else "#38BDF8" if r["score"] > 0.1 else "#FF9800"
         st.markdown(
             f'<div class="spot-card">'
             f'  <div style="flex:1">'
@@ -564,6 +635,14 @@ else:
                 use_container_width=True,
                 hide_index=True,
             )
+
+# Photo banner divider
+st.markdown("""
+<div class="photo-banner">
+    <img src="https://images.unsplash.com/photo-1517699418036-fb5d179fef0c?w=1400&q=80" alt="Kites on the beach">
+    <div class="photo-overlay">Mis geen sessie — stel je wind alerts in</div>
+</div>
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------
 # Section 3 — Wind alerts & agenda
