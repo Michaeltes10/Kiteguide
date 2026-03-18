@@ -45,6 +45,12 @@ alert_email = st.text_input(
     placeholder="jouw@email.nl",
     help="Ontvang een e-mail + agenda-uitnodiging zodra er 20+ knopen wind komt.",
 )
+alert_signup = st.button("Aanmelden voor Wind alert (gratis)")
+if alert_signup:
+    if alert_email:
+        st.success(f"✅ Je bent aangemeld voor wind alerts op {alert_email}!")
+    else:
+        st.warning("⚠️ Vul eerst je e-mailadres in om je aan te melden.")
 
 # ---------------------------------------------------------------------------
 # Sidebar — overige instellingen
