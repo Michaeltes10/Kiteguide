@@ -34,19 +34,17 @@ st.caption("Vind de beste kitespot — gebaseerd op wind, richting en jouw locat
 # ---------------------------------------------------------------------------
 # Hero section — postcode + e-mail (prominent on start screen)
 # ---------------------------------------------------------------------------
-col_pc, col_email = st.columns(2)
-with col_pc:
-    postcode = st.text_input(
-        "📍 Jouw postcode",
-        value="1057 TB",
-        help="We zoeken de beste kitespots in jouw buurt.",
-    )
-with col_email:
-    alert_email = st.text_input(
-        "📧 E-mailadres voor wind alerts",
-        placeholder="jouw@email.nl",
-        help="Ontvang een e-mail + agenda-uitnodiging zodra er 20+ knopen wind komt.",
-    )
+postcode = st.text_input(
+    "📍 Jouw postcode",
+    value="1057 TB",
+    help="We zoeken de beste kitespots in jouw buurt.",
+)
+alert_email = st.text_input(
+    "📧 E-mailadres voor wind alerts",
+    value="",
+    placeholder="jouw@email.nl",
+    help="Ontvang een e-mail + agenda-uitnodiging zodra er 20+ knopen wind komt.",
+)
 
 # ---------------------------------------------------------------------------
 # Sidebar — overige instellingen
