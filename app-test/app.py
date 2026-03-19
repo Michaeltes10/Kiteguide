@@ -369,13 +369,13 @@ min_kn = st.sidebar.number_input(
     "Minimum knopen",
     min_value=5,
     max_value=40,
-    value=16 if board_type == "Twintip" else 9,
+    value=18 if board_type == "Twintip" else 9,
 )
 max_kn = st.sidebar.number_input(
     "Maximum knopen",
     min_value=10,
     max_value=60,
-    value=35,
+    value=45,
 )
 st.sidebar.markdown("---")
 alert_threshold_kn = st.sidebar.number_input(
