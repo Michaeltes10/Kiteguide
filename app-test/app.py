@@ -364,7 +364,7 @@ st.sidebar.markdown("## INSTELLINGEN")
 board_type = st.sidebar.selectbox("Board type", ["Twintip", "Foil"])
 level = st.sidebar.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"])
 water_filter = st.sidebar.selectbox("Water type", ["Alles", "Zee", "Binnenwater"])
-days_ahead = st.sidebar.slider("Dagen vooruit", 1, 7, 3)
+days_ahead = st.sidebar.slider("Dagen vooruit", 1, 7, 7)
 min_kn = st.sidebar.number_input(
     "Minimum knopen",
     min_value=5,
