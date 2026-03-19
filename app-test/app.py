@@ -522,7 +522,7 @@ if ranked.empty:
     st.warning("Geen geschikte spots gevonden voor de huidige instellingen.")
 else:
     # Top picks as styled cards
-    st.markdown('<p class="section-header" style="font-size:1.2rem">🏆 Top aanbevelingen</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-header" style="font-size:1.2rem">Zet deze dagen en tijden in je agenda!</p>', unsafe_allow_html=True)
     top = ranked.head(10).copy()
 
     for _, r in top.iterrows():
