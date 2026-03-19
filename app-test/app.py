@@ -15,6 +15,7 @@ from utils import (
     parse_dir_windows,
     is_direction_in_window,
 )
+from spot_pages import get_spot_info
 from alerts import (
     find_alert_sessions,
     group_sessions,
@@ -478,12 +479,19 @@ if now_rows:
     for row in now_rows:
         type_icon = "🌊" if row["type"] == "sea" else "🏞️"
         badge = '<span class="badge-ok">Juiste windrichting</span>' if row["dir_ok"] else '<span class="badge-bad">Niet vaarbaar</span>'
+        dir_label_nl = nl_wind_dir(row["dir_label"])
+        # Make spot name a link to detail page if available
+        spot_info = get_spot_info(row["name"])
+        if spot_info:
+            name_html = f'<a href="/Spot_Detail?spot={spot_info["slug"]}" style="color:#E8EDF5;text-decoration:none;border-bottom:1px solid #38BDF8" class="spot-name">{row["name"]}</a>'
+        else:
+            name_html = f'<span class="spot-name">{row["name"]}</span>'
         st.markdown(
             f'<div class="spot-card">'
             f'  <div>'
-            f'    <span class="spot-name">{row["name"]}</span>'
+            f'    {name_html}'
             f'    <span class="spot-type"> {type_icon}</span>'
-            f'    <br><span class="spot-detail">{row["dir_label"]} ({row["dir_deg"]}°) · Gusts {row["gust_kn"]} kn</span>'
+            f'    <br><span class="spot-detail">{dir_label_nl} ({row["dir_deg"]}°) · Gusts {row["gust_kn"]} kn</span>'
             f'  </div>'
             f'  <div style="text-align:right">'
             f'    <span class="spot-wind">{row["wind_kn"]} kn</span><br>'
@@ -568,10 +576,15 @@ else:
         wind_dir_nl = nl_wind_dir(r["wind_dir"])
         score_pct = min(r["score"] * 100, 100)
         score_color = "#00C853" if r["score"] > 0.5 else "#38BDF8" if r["score"] > 0.1 else "#FF9800"
+        r_spot_info = get_spot_info(r["spot"])
+        if r_spot_info:
+            r_name_html = f'<a href="/Spot_Detail?spot={r_spot_info["slug"]}" style="color:#E8EDF5;text-decoration:none;border-bottom:1px solid #38BDF8" class="spot-name">{r["spot"]}</a>'
+        else:
+            r_name_html = f'<span class="spot-name">{r["spot"]}</span>'
         st.markdown(
             f'<div class="spot-card">'
             f'  <div style="flex:1">'
-            f'    <span class="spot-name">{r["spot"]}</span><br>'
+            f'    {r_name_html}<br>'
             f'    <span class="spot-detail">{time_str} · {wind_dir_nl} · {r["model"]}</span>'
             f'  </div>'
             f'  <div style="text-align:right; min-width:120px">'
