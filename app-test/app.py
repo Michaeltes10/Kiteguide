@@ -339,7 +339,7 @@ col_post, col_email = st.columns([1, 2])
 with col_post:
     postcode = st.text_input(
         "📍 Jouw postcode",
-        value="1057 TB",
+        value="1065 XZ",
         help="We zoeken de beste kitespots in jouw buurt.",
     )
 with col_email:
