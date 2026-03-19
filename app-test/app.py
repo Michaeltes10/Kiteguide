@@ -27,7 +27,7 @@ from alerts import (
 # ---------------------------------------------------------------------------
 # Page config
 # ---------------------------------------------------------------------------
-st.set_page_config(page_title="Kite Advisor NL", page_icon="🪁", layout="wide")
+st.set_page_config(page_title="KiteGuide", page_icon="🪁", layout="wide")
 
 # ---------------------------------------------------------------------------
 # Custom CSS — Duotone-inspired dark premium design
@@ -327,8 +327,8 @@ hr {
 # ---------------------------------------------------------------------------
 st.markdown("""
 <div class="hero-banner">
-    <p class="hero-title">🪁 Kite Advisor NL</p>
-    <p class="hero-subtitle">Vind de beste kitespot — gebaseerd op wind, richting en jouw locatie.</p>
+    <p class="hero-title">KiteGuide</p>
+    <p class="hero-subtitle">Ontdek waar en wanneer jij kan kiten bij jou in de buurt!</p>
 </div>
 """, unsafe_allow_html=True)
 
