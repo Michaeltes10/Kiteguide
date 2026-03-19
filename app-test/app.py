@@ -439,7 +439,7 @@ for _, spot in spots_df.iterrows():
 if now_rows:
     for row in now_rows:
         type_icon = "🌊" if row["type"] == "sea" else "🏞️"
-        badge = '<span class="badge-ok">OK</span>' if row["dir_ok"] else '<span class="badge-bad">NIET OK</span>'
+        badge = '<span class="badge-ok">Juiste windrichting</span>' if row["dir_ok"] else '<span class="badge-bad">Niet vaarbaar</span>'
         st.markdown(
             f'<div class="spot-card">'
             f'  <div>'
