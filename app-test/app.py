@@ -25,6 +25,44 @@ from alerts import (
 )
 
 # ---------------------------------------------------------------------------
+# Dutch formatting helpers
+# ---------------------------------------------------------------------------
+_NL_DAYS = {
+    "Mon": "maandag", "Tue": "dinsdag", "Wed": "woensdag", "Thu": "donderdag",
+    "Fri": "vrijdag", "Sat": "zaterdag", "Sun": "zondag",
+}
+_NL_MONTHS = {
+    "Jan": "januari", "Feb": "februari", "Mar": "maart", "Apr": "april",
+    "May": "mei", "Jun": "juni", "Jul": "juli", "Aug": "augustus",
+    "Sep": "september", "Oct": "oktober", "Nov": "november", "Dec": "december",
+}
+_NL_WIND_DIR = {
+    "N": "Noord", "NNE": "Noord-Noordoost", "NE": "Noordoost", "ENE": "Oost-Noordoost",
+    "E": "Oost", "ESE": "Oost-Zuidoost", "SE": "Zuidoost", "SSE": "Zuid-Zuidoost",
+    "S": "Zuid", "SSW": "Zuid-Zuidwest", "SW": "Zuidwest", "WSW": "West-Zuidwest",
+    "W": "West", "WNW": "West-Noordwest", "NW": "Noordwest", "NNW": "Noord-Noordwest",
+}
+
+
+def format_nl_datetime(dt) -> str:
+    """Format a datetime as 'dinsdag 24 maart om 13:00 uur'."""
+    day = _NL_DAYS.get(dt.strftime("%a"), dt.strftime("%a"))
+    month = _NL_MONTHS.get(dt.strftime("%b"), dt.strftime("%b"))
+    return f"{day} {dt.day} {month} om {dt.strftime('%H:%M')} uur"
+
+
+def format_nl_datetime_short(dt) -> str:
+    """Format a datetime as 'dinsdag 13:00 uur'."""
+    day = _NL_DAYS.get(dt.strftime("%a"), dt.strftime("%a"))
+    return f"{day} {dt.strftime('%H:%M')} uur"
+
+
+def nl_wind_dir(abbr: str) -> str:
+    """Translate wind direction abbreviation to Dutch full name."""
+    return _NL_WIND_DIR.get(abbr, abbr)
+
+
+# ---------------------------------------------------------------------------
 # Page config
 # ---------------------------------------------------------------------------
 st.set_page_config(page_title="KiteGuide", page_icon="🪁", layout="wide")
@@ -526,14 +564,15 @@ else:
     top = ranked.head(10).copy()
 
     for _, r in top.iterrows():
-        time_str = r["time"].strftime("%a %d %b %H:%M")
+        time_str = format_nl_datetime(r["time"])
+        wind_dir_nl = nl_wind_dir(r["wind_dir"])
         score_pct = min(r["score"] * 100, 100)
         score_color = "#00C853" if r["score"] > 0.5 else "#38BDF8" if r["score"] > 0.1 else "#FF9800"
         st.markdown(
             f'<div class="spot-card">'
             f'  <div style="flex:1">'
             f'    <span class="spot-name">{r["spot"]}</span><br>'
-            f'    <span class="spot-detail">{time_str} · {r["wind_dir"]} · {r["model"]}</span>'
+            f'    <span class="spot-detail">{time_str} · {wind_dir_nl} · {r["model"]}</span>'
             f'  </div>'
             f'  <div style="text-align:right; min-width:120px">'
             f'    <span class="spot-wind">{r["wind_kn"]} kn</span>'
@@ -557,11 +596,12 @@ else:
         best = spot_data.iloc[0]
         with st.expander(
             f"{sname} — beste score {best['score']:.2f} "
-            f"({best['time'].strftime('%a %H:%M')}, "
-            f"{best['wind_dir']} {best['wind_kn']} kn)"
+            f"({format_nl_datetime_short(best['time'])}, "
+            f"{nl_wind_dir(best['wind_dir'])} {best['wind_kn']} kn)"
         ):
             display = spot_data.copy()
-            display["time"] = display["time"].dt.strftime("%a %d %b %H:%M")
+            display["wind_dir"] = display["wind_dir"].apply(nl_wind_dir)
+            display["time"] = display["time"].apply(format_nl_datetime)
             st.dataframe(
                 display[["time", "wind_dir", "wind_kn", "gust_kn", "score", "model"]],
                 use_container_width=True,
@@ -595,7 +635,7 @@ else:
     )
     for session in wind_sessions:
         msg = format_alert_message(session)
-        start_ts = pd.Timestamp(session["start"]).strftime("%a %d %b %H:%M")
+        start_ts = format_nl_datetime(pd.Timestamp(session["start"]))
         st.markdown(
             f'<div class="alert-card">'
             f'  <div class="alert-title">{session["spot"]} — {start_ts}</div>'
@@ -609,7 +649,7 @@ else:
     dl_cols = st.columns(min(len(wind_sessions), 3))
     for i, session in enumerate(wind_sessions):
         ics_content = generate_ics_event(session)
-        start_str = pd.Timestamp(session["start"]).strftime("%a %d %b %H:%M")
+        start_str = format_nl_datetime(pd.Timestamp(session["start"]))
         filename = f"kite_{session['spot'].replace(' ', '_')}.ics"
         with dl_cols[i % len(dl_cols)]:
             st.download_button(
