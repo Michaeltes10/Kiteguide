@@ -424,19 +424,18 @@ st.markdown(
     'letter-spacing:1px;margin-bottom:0.5rem">Instellingen</p>',
     unsafe_allow_html=True,
 )
+board_type = "Twintip"
+level = "Intermediate"
+water_filter = "Alles"
+days_ahead = st.slider("Dagen vooruit", 1, 7, 7, key="main_days")
 col_s1, col_s2 = st.columns(2)
 with col_s1:
-    board_type = st.selectbox("Board type", ["Twintip", "Foil"], key="main_board")
-    level = st.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"], key="main_level")
-    water_filter = st.selectbox("Water type", ["Alles", "Zee", "Binnenwater"], key="main_water")
-with col_s2:
-    days_ahead = st.slider("Dagen vooruit", 1, 7, 7, key="main_days")
     min_kn = st.number_input(
         "Minimum knopen",
-        min_value=5, max_value=40,
-        value=18 if board_type == "Twintip" else 9,
+        min_value=5, max_value=40, value=18,
         key="main_min_kn",
     )
+with col_s2:
     max_kn = st.number_input(
         "Maximum knopen",
         min_value=10, max_value=60, value=45,
