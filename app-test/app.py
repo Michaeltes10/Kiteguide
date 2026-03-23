@@ -386,8 +386,43 @@ with col_email:
         "📧 E-mailadres voor wind alerts",
         value="",
         placeholder="jouw@email.nl",
-        help="Ontvang een e-mail + agenda-uitnodiging zodra er 20+ knopen wind komt.",
+        help="Ontvang een e-mail + agenda-uitnodiging zodra er wind komt.",
     )
+
+# ---------------------------------------------------------------------------
+# Inline settings (visible on mobile before signup)
+# ---------------------------------------------------------------------------
+st.markdown("---")
+st.markdown(
+    '<p style="color:#38BDF8;font-weight:700;font-size:0.9rem;text-transform:uppercase;'
+    'letter-spacing:1px;margin-bottom:0.5rem">Instellingen</p>',
+    unsafe_allow_html=True,
+)
+col_s1, col_s2 = st.columns(2)
+with col_s1:
+    board_type = st.selectbox("Board type", ["Twintip", "Foil"], key="main_board")
+    level = st.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"], key="main_level")
+    water_filter = st.selectbox("Water type", ["Alles", "Zee", "Binnenwater"], key="main_water")
+with col_s2:
+    days_ahead = st.slider("Dagen vooruit", 1, 7, 7, key="main_days")
+    min_kn = st.number_input(
+        "Minimum knopen",
+        min_value=5, max_value=40,
+        value=18 if board_type == "Twintip" else 9,
+        key="main_min_kn",
+    )
+    max_kn = st.number_input(
+        "Maximum knopen",
+        min_value=10, max_value=60, value=45,
+        key="main_max_kn",
+    )
+alert_threshold_kn = st.number_input(
+    "Alert drempel (knopen)",
+    min_value=10, max_value=50, value=20,
+    help="Je krijgt een alert bij wind >= dit aantal knopen.",
+    key="main_alert_threshold",
+)
+st.markdown("---")
 
 alert_signup = st.button("Aanmelden voor Wind alert (gratis)")
 if alert_signup:
@@ -395,35 +430,6 @@ if alert_signup:
         st.success(f"Je bent aangemeld voor wind alerts op {alert_email}!")
     else:
         st.warning("Vul eerst je e-mailadres in om je aan te melden.")
-
-# ---------------------------------------------------------------------------
-# Sidebar — overige instellingen
-# ---------------------------------------------------------------------------
-st.sidebar.markdown("## INSTELLINGEN")
-board_type = st.sidebar.selectbox("Board type", ["Twintip", "Foil"])
-level = st.sidebar.selectbox("Niveau", ["Beginner", "Intermediate", "Advanced"])
-water_filter = st.sidebar.selectbox("Water type", ["Alles", "Zee", "Binnenwater"])
-days_ahead = st.sidebar.slider("Dagen vooruit", 1, 7, 7)
-min_kn = st.sidebar.number_input(
-    "Minimum knopen",
-    min_value=5,
-    max_value=40,
-    value=18 if board_type == "Twintip" else 9,
-)
-max_kn = st.sidebar.number_input(
-    "Maximum knopen",
-    min_value=10,
-    max_value=60,
-    value=45,
-)
-st.sidebar.markdown("---")
-alert_threshold_kn = st.sidebar.number_input(
-    "Alert drempel (knopen)",
-    min_value=10,
-    max_value=50,
-    value=20,
-    help="Je krijgt een alert bij wind >= dit aantal knopen.",
-)
 
 # ---------------------------------------------------------------------------
 # Load data
