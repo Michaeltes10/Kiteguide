@@ -467,21 +467,6 @@ if user_loc is None:
     st.error(f"Kon postcode '{postcode}' niet vinden. Probeer een andere postcode.")
     st.stop()
 
-st.sidebar.markdown("---")
-st.sidebar.markdown(
-    f'<div class="metric-card">'
-    f'<div class="metric-value">{user_loc[0]:.3f}</div>'
-    f'<div class="metric-label">Latitude</div>'
-    f'</div>',
-    unsafe_allow_html=True,
-)
-st.sidebar.markdown(
-    f'<div class="metric-card" style="margin-top:0.5rem">'
-    f'<div class="metric-value">{user_loc[1]:.3f}</div>'
-    f'<div class="metric-label">Longitude</div>'
-    f'</div>',
-    unsafe_allow_html=True,
-)
 
 # ---------------------------------------------------------------------------
 # Section 1 — Nu per spot (with styled cards)
