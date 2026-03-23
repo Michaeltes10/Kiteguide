@@ -106,6 +106,7 @@ def _fetch_open_meteo(lat: float, lon: float, days: int) -> Optional[dict]:
         "latitude": lat,
         "longitude": lon,
         "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        "daily": "sunrise,sunset",
         "wind_speed_unit": "kn",
         "timezone": "Europe/Amsterdam",
         "forecast_days": min(days, 16),
@@ -118,10 +119,15 @@ def _fetch_open_meteo(lat: float, lon: float, days: int) -> Optional[dict]:
         return None
 
 
-def get_forecast(lat: float, lon: float, days: int = 3) -> pd.DataFrame:
+def get_forecast(
+    lat: float, lon: float, days: int = 3, *, daylight_only: bool = True,
+) -> pd.DataFrame:
     """
     Return a DataFrame with columns:
     time, wind_kn, wind_dir_deg, wind_dir_label, gust_kn
+
+    When *daylight_only* is True (default), hours before sunrise or after
+    sunset for that location are excluded.
     """
     data = _fetch_open_meteo(lat, lon, days)
     if data is None or "hourly" not in data:
@@ -137,12 +143,24 @@ def get_forecast(lat: float, lon: float, days: int = 3) -> pd.DataFrame:
     df["wind_dir_label"] = df["wind_dir_deg"].apply(
         lambda d: degrees_to_compass(d) if pd.notna(d) else ""
     )
+
+    # Filter to daylight hours using daily sunrise/sunset from Open-Meteo
+    if daylight_only and "daily" in data:
+        daily = data["daily"]
+        sunrise_times = pd.to_datetime(daily.get("sunrise", []))
+        sunset_times = pd.to_datetime(daily.get("sunset", []))
+        if len(sunrise_times) > 0 and len(sunset_times) > 0:
+            mask = pd.Series(False, index=df.index)
+            for sr, ss in zip(sunrise_times, sunset_times):
+                mask = mask | ((df["time"] >= sr) & (df["time"] <= ss))
+            df = df[mask].reset_index(drop=True)
+
     return df
 
 
 def get_current_conditions(lat: float, lon: float) -> Optional[Dict]:
     """Return most recent hourly observation-like data from Open-Meteo."""
-    df = get_forecast(lat, lon, days=2)
+    df = get_forecast(lat, lon, days=2, daylight_only=False)
     if df.empty:
         return None
     now = pd.Timestamp.now(tz="Europe/Amsterdam").tz_localize(None)
