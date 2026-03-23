@@ -3,6 +3,7 @@ Kite Advisor NL — Test Version
 Streamlit app. Works without API keys (Open-Meteo only).
 """
 
+import urllib.parse
 import streamlit as st
 import pandas as pd
 from utils import (
@@ -338,6 +339,31 @@ footer {visibility: hidden;}
     margin-top: 0.3rem;
 }
 
+/* ---------- Action buttons (Agenda / WhatsApp) ---------- */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+.action-btn:hover { filter: brightness(1.2); }
+.cal-btn {
+    background: rgba(56,189,248,0.15);
+    border: 1px solid rgba(56,189,248,0.3);
+    color: #38BDF8;
+}
+.wa-btn {
+    background: rgba(37,211,102,0.15);
+    border: 1px solid rgba(37,211,102,0.3);
+    color: #25D366;
+}
+
 /* ---------- Footer ---------- */
 .footer {
     text-align: center;
@@ -577,7 +603,7 @@ else:
     st.markdown('<p class="section-header" style="font-size:1.2rem">Zet deze dagen en tijden in je agenda!</p>', unsafe_allow_html=True)
     top = ranked.head(10).copy()
 
-    for _, r in top.iterrows():
+    for idx, (_, r) in enumerate(top.iterrows()):
         time_str = format_nl_datetime(r["time"])
         wind_dir_nl = nl_wind_dir(r["wind_dir"])
         score_pct = min(r["score"] * 100, 100)
@@ -587,8 +613,40 @@ else:
             r_name_html = f'<a href="/Spot_Detail?spot={r_spot_info["slug"]}" style="color:#E8EDF5;text-decoration:none;border-bottom:1px solid #38BDF8" class="spot-name">{r["spot"]}</a>'
         else:
             r_name_html = f'<span class="spot-name">{r["spot"]}</span>'
+
+        # --- WhatsApp share URL ---
+        dt = r["time"]
+        nl_day = _NL_DAYS.get(dt.strftime("%a"), dt.strftime("%a"))
+        nl_month = _NL_MONTHS.get(dt.strftime("%b"), dt.strftime("%b"))
+        wa_date = f"{nl_day} {dt.day} {nl_month}"
+        wa_time = dt.strftime("%H:%M")
+        wa_text = (
+            f"Zullen we samen gaan kiten op {wa_date} om {wa_time}? "
+            f"Er staat {r['wind_kn']} knopen {wind_dir_nl} en vlagen tot {r['gust_kn']} kn "
+            f"bij {r['spot']}! 🪁"
+        )
+        wa_url = f"https://wa.me/?text={urllib.parse.quote(wa_text)}"
+
+        # --- Google Calendar URL ---
+        cal_title = urllib.parse.quote(f"Kiten {r['spot']} - {r['wind_kn']} kn {wind_dir_nl}")
+        cal_start = dt.strftime("%Y%m%dT%H%M%S")
+        cal_end_dt = dt + pd.Timedelta(hours=2)
+        cal_end = cal_end_dt.strftime("%Y%m%dT%H%M%S")
+        cal_details = urllib.parse.quote(
+            f"Wind: {r['wind_kn']} kn ({wind_dir_nl})\n"
+            f"Vlagen: {r['gust_kn']} kn\n"
+            f"Spot: {r['spot']}\n"
+            f"Score: {r['score']:.2f}"
+        )
+        cal_location = urllib.parse.quote(r["spot"])
+        gcal_url = (
+            f"https://calendar.google.com/calendar/render?action=TEMPLATE"
+            f"&text={cal_title}&dates={cal_start}/{cal_end}"
+            f"&details={cal_details}&location={cal_location}"
+        )
+
         st.markdown(
-            f'<div class="spot-card">'
+            f'<div class="spot-card" style="flex-wrap:wrap">'
             f'  <div style="flex:1">'
             f'    {r_name_html}<br>'
             f'    <span class="spot-detail">{time_str} · {wind_dir_nl} · {r["model"]}</span>'
@@ -600,6 +658,10 @@ else:
             f'      <div class="score-bar-fill" style="width:{score_pct}%; background:linear-gradient(90deg,{score_color},{score_color})"></div>'
             f'    </div>'
             f'    <span class="spot-detail">{r["score"]:.3f}</span>'
+            f'  </div>'
+            f'  <div style="width:100%; display:flex; gap:8px; margin-top:10px">'
+            f'    <a href="{gcal_url}" target="_blank" class="action-btn cal-btn">📅 Agenda</a>'
+            f'    <a href="{wa_url}" target="_blank" class="action-btn wa-btn">💬 WhatsApp</a>'
             f'  </div>'
             f'</div>',
             unsafe_allow_html=True,
